@@ -262,6 +262,11 @@ ifneq ($(DEFINES),)
 $(error DEFINES variable set, please move to GLOBAL_DEFINES: $(DEFINES))
 endif
 
+# Include rules that are allowed to depend on COMPILER_TYPE/LINKER_TYPE
+-include target/$(TARGET)/rules-late.mk
+-include platform/$(PLATFORM)/rules-late.mk
+-include arch/$(ARCH)/rules-late.mk
+
 # try to have the compiler output colorized error messages if available
 export GCC_COLORS ?= 1
 
