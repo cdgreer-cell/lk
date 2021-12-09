@@ -207,6 +207,12 @@ ARCH_COMPILEFLAGS += -Wno-asm-operand-widths
 endif
 endif
 
+# Detect whether we are using ld.lld. If we don't detect ld.lld, we assume
+# it's ld.bfd. This check can be refined in the future if we need to handle
+# more cases (e.g. ld.gold).
+LINKER_TYPE := $(shell $(LD) -v 2>&1 | grep -q "LLD" && echo lld || echo bfd)
+$(info LINKER_TYPE=$(LINKER_TYPE))
+
 $(info PROJECT = $(PROJECT))
 $(info PLATFORM = $(PLATFORM))
 $(info TARGET = $(TARGET))
