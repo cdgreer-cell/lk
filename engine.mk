@@ -207,6 +207,9 @@ ARCH_COMPILEFLAGS += -Wno-asm-operand-widths
 endif
 endif
 
+COMPILER_TYPE := $(shell $(CC) -v 2>&1 | grep -q "clang version" && echo clang || echo gcc)
+$(info COMPILER_TYPE=$(COMPILER_TYPE))
+
 # Detect whether we are using ld.lld. If we don't detect ld.lld, we assume
 # it's ld.bfd. This check can be refined in the future if we need to handle
 # more cases (e.g. ld.gold).
