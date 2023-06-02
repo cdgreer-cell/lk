@@ -11,19 +11,10 @@
 #include <arch/defines.h>
 #include <arch/riscv/asm.h>
 
-#ifdef __ASSEMBLER__
-// The Clang assembler rejects expressions containing e.g. (1u << N), so avoid
-// using the u suffix when compiling assembly files.
-#define RISCV_USER_OFFSET   (0)
-#define RISCV_SUPER_OFFSET  (1)
-#define RISCV_HYPER_OFFSET  (2)
-#define RISCV_MACH_OFFSET   (3)
-#else
 #define RISCV_USER_OFFSET   (0u)
 #define RISCV_SUPER_OFFSET  (1u)
 #define RISCV_HYPER_OFFSET  (2u)
 #define RISCV_MACH_OFFSET   (3u)
-#endif
 
 #if RISCV_M_MODE
 # define RISCV_XMODE_OFFSET     (RISCV_MACH_OFFSET)
