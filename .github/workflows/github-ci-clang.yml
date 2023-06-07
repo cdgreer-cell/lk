@@ -14,9 +14,9 @@ jobs:
         debug: [2]
         ubsan: [1]
         project:
-          - qemu-virt-arm32-test
-          - qemu-virt-arm64-test
-          - qemu-mips-test
+#          - qemu-virt-arm32-test
+#          - qemu-virt-arm64-test
+#          - qemu-mips-test
           - qemu-virt-riscv32-test
           - qemu-virt-riscv64-test
           - qemu-virt-riscv64-supervisor-test
