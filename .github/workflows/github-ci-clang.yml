@@ -10,22 +10,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        toolchain-ver: [14]
+        toolchain-ver: [13, 14, 15]
         debug: [2]
-        ubsan: [1]
         project:
-#          - qemu-virt-arm32-test
-#          - qemu-virt-arm64-test
-#          - qemu-mips-test
-          - qemu-virt-riscv32-test
+          # Note: Clang toolchains do not ship with a compiler-rt (libgcc) for
+          # all targets, so we have to restrict this build matrix to targets
+          # that build without requiring these functions (i.e. 64-bit targets,
+          # since 32-bit ones require functions such as __divdi3).
+          - pc-x86-64-test
+          - qemu-virt-arm64-test
           - qemu-virt-riscv64-test
           - qemu-virt-riscv64-supervisor-test
-          - qemu-virt-arm32-minimal
     env:
       PROJECT: ${{ matrix.project }}
       TOOLCHAIN_VER: ${{ matrix.toolchain-ver }}
       DEBUG: ${{ matrix.debug }}
-      UBSAN: ${{ matrix.ubsan }}
+      UBSAN: 0  # UBSan runtimes for baremetal are not part of the toolchain
     steps:
     - name: banner
       shell: bash
@@ -59,6 +59,7 @@ jobs:
         echo "NM=${LLVM_BINDIR}/llvm-nm" >> $GITHUB_ENV
         echo "STRIP=${LLVM_BINDIR}/llvm-strip" >> $GITHUB_ENV
         echo "TOOLCHAIN_PREFIX=/invalid/prefix/should/not/be/used" >> $GITHUB_ENV
+        echo "LIBGCC=" >> $GITHUB_ENV
 
     # build it
     - name: build
