@@ -46,8 +46,11 @@ jobs:
       run: |
         apt search lld-
         apt install clang-${{ matrix.toolchain-ver }} lld-${{ matrix.toolchain-ver }}
+        GCC_TOOLCHAIN_PREFIX=$(make list-toolchain | grep TOOLCHAIN_PREFIX | tail -1 | cut -d ' ' -f 3)
+        # Map the GCC toolchain prefix to a clang --target argument:
+        CLANG_TRIPLE=$(echo "${GCC_TOOLCHAIN_PREFIX}" | sed 's/-elf-/-unknown-elf/g')
         LLVM_BINDIR=/usr/lib/llvm-${{ matrix.toolchain-ver }}/bin
-        echo "CC=${LLVM_BINDIR}/clang" >> $GITHUB_ENV
+        echo "CC=${LLVM_BINDIR}/clang --target=${CLANG_TRIPLE}" >> $GITHUB_ENV
         echo "LD=${LLVM_BINDIR}/ld.lld" >> $GITHUB_ENV
         echo "OBJDUMP=${LLVM_BINDIR}/llvm-objdump" >> $GITHUB_ENV
         echo "OBJCOPY=${LLVM_BINDIR}/llvm-objcopy" >> $GITHUB_ENV
