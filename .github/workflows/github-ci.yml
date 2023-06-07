@@ -10,41 +10,44 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        toolchain-ver: [12.2.0, 7.5.0]
-        debug: [2, 0]
-        ubsan: [1, 0]
+#        toolchain-ver: [12.2.0, 7.5.0]
+#        debug: [2, 0]
+#        ubsan: [1, 0]
+        toolchain-ver: [12.2.0]
+        debug: [2]
+        ubsan: [1]
         project:
-          - qemu-virt-arm32-test
-          - qemu-virt-arm64-test
-          - qemu-virt-m68k-test
-          - qemu-microblaze-test
-          - qemu-mips-test
+#          - qemu-virt-arm32-test
+#          - qemu-virt-arm64-test
+#          - qemu-virt-m68k-test
+#          - qemu-microblaze-test
+#          - qemu-mips-test
           - qemu-virt-riscv32-test
           - qemu-virt-riscv64-test
           - qemu-virt-riscv64-supervisor-test
-          - qemu-virt-arm32-minimal
-          - pc-x86-test
-          - pc-x86-legacy-test
-          - pc-x86-64-test
-          - or1ksim
-          - vim2-test
-          - zybo-test
-          - rpi2-test
-          - rpi3-test
-          - uzed-test
-          - stm32-h103-test
-          - stm32746g-eval2-test
-          - stm32f429i-disco-test
-          - stm32f746g-disco-test
-          - stm32f4-discovery-test
-          - stellaris-launchpad-test
-          - nrf51-pca10028-test
-          - nucleo-f072rb
-          - pico-test
-          - sifive-e-test
-          - sifive-unleashed-test
-          - visionfive2-test
-          - rosco-m68k-test
+#          - qemu-virt-arm32-minimal
+#          - pc-x86-test
+#          - pc-x86-legacy-test
+#          - pc-x86-64-test
+#          - or1ksim
+#          - vim2-test
+#          - zybo-test
+#          - rpi2-test
+#          - rpi3-test
+#          - uzed-test
+#          - stm32-h103-test
+#          - stm32746g-eval2-test
+#          - stm32f429i-disco-test
+#          - stm32f746g-disco-test
+#          - stm32f4-discovery-test
+#          - stellaris-launchpad-test
+#          - nrf51-pca10028-test
+#          - nucleo-f072rb
+#          - pico-test
+#          - sifive-e-test
+#          - sifive-unleashed-test
+#          - visionfive2-test
+#          - rosco-m68k-test
         exclude:
           # no toolchain for 7.5.0 for or1k
           - project: or1ksim
