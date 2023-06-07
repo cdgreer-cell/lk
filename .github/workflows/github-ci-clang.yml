@@ -1,0 +1,66 @@
+name: LK CI (Clang)
+
+# Brute force build a bunch of variants of LK in parallel jobs.
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain-ver: [14]
+        debug: [2]
+        ubsan: [1]
+        project:
+          - qemu-virt-arm32-test
+          - qemu-virt-arm64-test
+          - qemu-mips-test
+          - qemu-virt-riscv32-test
+          - qemu-virt-riscv64-test
+          - qemu-virt-riscv64-supervisor-test
+          - qemu-virt-arm32-minimal
+    env:
+      PROJECT: ${{ matrix.project }}
+      TOOLCHAIN_VER: ${{ matrix.toolchain-ver }}
+      DEBUG: ${{ matrix.debug }}
+      UBSAN: ${{ matrix.ubsan }}
+    steps:
+    - name: banner
+      shell: bash
+      run: |
+        printf "Building with %d processors\n" "$(nproc)"
+        grep -oP '(?<=model name\t: ).*' /proc/cpuinfo|head -n1
+        echo PROJECT = $PROJECT
+        echo TOOLCHAIN_VER = $TOOLCHAIN_VER
+        echo DEBUG = $DEBUG
+        echo UBSAN = $UBSAN
+
+    - name: checkout
+      uses: actions/checkout@v3
+
+    # Install LLVM and set up the required environment variables
+    - name: compute toolchain
+      shell: bash
+      run: |
+        apt search lld-
+        apt install clang-${{ matrix.toolchain-ver }} lld-${{ matrix.toolchain-ver }}
+        LLVM_BINDIR=/usr/lib/llvm-${{ matrix.toolchain-ver }}/bin
+        echo "CC=${LLVM_BINDIR}/clang" >> $GITHUB_ENV
+        echo "LD=${LLVM_BINDIR}/ld.lld" >> $GITHUB_ENV
+        echo "OBJDUMP=${LLVM_BINDIR}/llvm-objdump" >> $GITHUB_ENV
+        echo "OBJCOPY=${LLVM_BINDIR}/llvm-objcopy" >> $GITHUB_ENV
+        echo "CPPFILT=${LLVM_BINDIR}/llvm-cxxfilt" >> $GITHUB_ENV
+        echo "SIZE=${LLVM_BINDIR}/llvm-size" >> $GITHUB_ENV
+        echo "NM=${LLVM_BINDIR}/llvm-nm" >> $GITHUB_ENV
+        echo "STRIP=${LLVM_BINDIR}/llvm-strip" >> $GITHUB_ENV
+        echo "TOOLCHAIN_PREFIX=/invalid/prefix/should/not/be/used" >> $GITHUB_ENV
+
+    # build it
+    - name: build
+      shell: bash
+      run: |
+        make -j $(nproc)
+
+# vim: ts=2 sw=2 expandtab
