@@ -74,7 +74,7 @@ real_start:
     /* far jump to load the CS from our GDT */
     pushl $CODE_SELECTOR
     pushl $PHYS(.Lfarjump)
-    retf
+    lret
 
 .Lfarjump:
 
