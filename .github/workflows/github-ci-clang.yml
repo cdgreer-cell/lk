@@ -45,7 +45,7 @@ jobs:
       shell: bash
       run: |
         apt search lld-
-        apt install clang-${{ matrix.toolchain-ver }} lld-${{ matrix.toolchain-ver }}
+        sudo apt install clang-${{ matrix.toolchain-ver }} lld-${{ matrix.toolchain-ver }}
         GCC_TOOLCHAIN_PREFIX=$(make list-toolchain | grep TOOLCHAIN_PREFIX | tail -1 | cut -d ' ' -f 3)
         # Map the GCC toolchain prefix to a clang --target argument:
         CLANG_TRIPLE=$(echo "${GCC_TOOLCHAIN_PREFIX}" | sed 's/-elf-/-unknown-elf/g')
